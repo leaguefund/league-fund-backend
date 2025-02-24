@@ -1,0 +1,49 @@
+2025-02-23 22:33:56.513 MST [87787] LOG:  starting PostgreSQL 14.17 (Homebrew) on aarch64-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 22:33:56.522 MST [87787] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 22:33:56.522 MST [87787] LOG:  could not bind IPv6 address "::1": Address already in use
+2025-02-23 22:33:56.522 MST [87787] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 22:33:56.522 MST [87787] WARNING:  could not create listen socket for "localhost"
+2025-02-23 22:33:56.522 MST [87787] FATAL:  could not create any TCP/IP sockets
+2025-02-23 22:33:56.522 MST [87787] LOG:  database system is shut down
+2025-02-23 22:40:29.276 MST [99334] LOG:  starting PostgreSQL 14.17 (Homebrew) on aarch64-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 22:40:29.285 MST [99334] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 22:40:29.285 MST [99334] LOG:  could not bind IPv6 address "::1": Address already in use
+2025-02-23 22:40:29.285 MST [99334] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 22:40:29.285 MST [99334] WARNING:  could not create listen socket for "localhost"
+2025-02-23 22:40:29.285 MST [99334] FATAL:  could not create any TCP/IP sockets
+2025-02-23 22:40:29.285 MST [99334] LOG:  database system is shut down
+2025-02-23 22:46:40.677 MST [11485] LOG:  starting PostgreSQL 14.17 (Homebrew) on aarch64-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 22:46:40.679 MST [11485] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 22:46:40.679 MST [11485] LOG:  could not bind IPv6 address "::1": Address already in use
+2025-02-23 22:46:40.679 MST [11485] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 22:46:40.679 MST [11485] WARNING:  could not create listen socket for "localhost"
+2025-02-23 22:46:40.679 MST [11485] FATAL:  could not create any TCP/IP sockets
+2025-02-23 22:46:40.679 MST [11485] LOG:  database system is shut down
+2025-02-23 22:47:15.391 MST [12207] LOG:  starting PostgreSQL 14.17 (Homebrew) on aarch64-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 22:47:15.402 MST [12207] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 22:47:15.402 MST [12207] LOG:  could not bind IPv6 address "::1": Address already in use
+2025-02-23 22:47:15.402 MST [12207] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 22:47:15.402 MST [12207] WARNING:  could not create listen socket for "localhost"
+2025-02-23 22:47:15.402 MST [12207] FATAL:  could not create any TCP/IP sockets
+2025-02-23 22:47:15.402 MST [12207] LOG:  database system is shut down
+2025-02-23 22:48:08.111 MST [13297] LOG:  starting PostgreSQL 14.17 (Homebrew) on aarch64-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 22:48:08.115 MST [13297] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 22:48:08.115 MST [13297] LOG:  could not bind IPv6 address "::1": Address already in use
+2025-02-23 22:48:08.115 MST [13297] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 22:48:08.115 MST [13297] WARNING:  could not create listen socket for "localhost"
+2025-02-23 22:48:08.116 MST [13297] FATAL:  could not create any TCP/IP sockets
+2025-02-23 22:48:08.116 MST [13297] LOG:  database system is shut down
+2025-02-23 23:26:26.576 MST [10175] LOG:  starting PostgreSQL 13.20 on arm-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 23:26:26.587 MST [10175] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 23:26:26.587 MST [10175] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 23:26:26.587 MST [10175] LOG:  listening on IPv6 address "::1", port 5432
+2025-02-23 23:26:26.588 MST [10175] FATAL:  could not open lock file "/tmp/.s.PGSQL.5432.lock": Permission denied
+2025-02-23 23:26:26.588 MST [10175] LOG:  database system is shut down
+2025-02-23 23:28:27.772 MST [12742] LOG:  starting PostgreSQL 13.20 on arm-apple-darwin24.2.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.6), 64-bit
+2025-02-23 23:28:27.784 MST [12742] LOG:  could not bind IPv4 address "192.168.86.27": Can't assign requested address
+2025-02-23 23:28:27.784 MST [12742] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 23:28:27.784 MST [12742] LOG:  could not bind IPv6 address "::1": Address already in use
+2025-02-23 23:28:27.784 MST [12742] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2025-02-23 23:28:27.784 MST [12742] WARNING:  could not create listen socket for "localhost"
+2025-02-23 23:28:27.784 MST [12742] FATAL:  could not create any TCP/IP sockets
+2025-02-23 23:28:27.785 MST [12742] LOG:  database system is shut down
