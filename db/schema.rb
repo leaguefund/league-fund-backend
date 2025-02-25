@@ -10,8 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 0) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_24_211918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "leagues", force: :cascade do |t|
+    t.string "address"
+    t.string "name"
+    t.string "avatar"
+    t.integer "commissioner_id"
+    t.json "invites"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string "key"
+    t.string "session_id"
+    t.string "username"
+    t.string "email"
+    t.string "wallet"
+    t.json "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "import"
+    t.string "username"
+    t.string "email"
+    t.string "avatar"
+    t.string "wallet"
+    t.string "sleeper_id"
+    t.string "sleeper_avatar_id"
+    t.json "favorite_league"
+    t.json "leagues_cache"
+    t.json "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 end

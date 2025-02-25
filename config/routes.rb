@@ -11,4 +11,22 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  namespace :v1 do
+    namespace :api do
+      post  'league/read',   to: 'league#read'
+      get   'league/read',   to: 'league#read'
+      post  'league/invite', to: 'league#invite'
+
+      post  'sleeper/username',   to: 'sleeper#username'
+      get   'sleeper/username',   to: 'sleeper#username'
+
+      post  'user/email',            to: 'user#email'
+      get   'user/email',            to: 'user#email'
+      post  'user/validate-email',   to: 'user#validate_email'
+      get   'user/validate-email',   to: 'user#validate_email'
+
+      # wallet/read
+    end
+  end
 end
