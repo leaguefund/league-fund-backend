@@ -8,10 +8,10 @@ module V1
         def username
           # Validate Session and Username passed
           unless session_id = params[:session_id]
-            return render json: { error: "no-session-id" }, status: :not_found
+            return render json: { error: "no-session-id", message: "Internal Server Error (nsi)" }, status: :not_found
           end
           unless sleeper_user = params[:username]
-            return render json: { error: "no-username" }, status: :not_found
+            return render json: { error: "no-username", message: "Internal Server Error (nu)" }, status: :not_found
           end
           # Find or Create User
           user = User.find_or_create_by(import: :sleeper, username: sleeper_user)
@@ -25,7 +25,7 @@ module V1
           user.build_sleeper_user
           # Validate if user found
           unless user.sleeper_id
-            return render json: { error: "no-sleeper-user" }, status: :not_found
+            return render json: { error: "no-sleeper-user", message: "Username not found 🤔" }, status: :not_found
           end
           # Render response
           render json: user.username_api_response
