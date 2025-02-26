@@ -19,6 +19,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_211918) do
     t.string "name"
     t.string "avatar"
     t.integer "commissioner_id"
+    t.string "sleeper_id"
+    t.string "sleeper_avatar_id"
     t.json "invites"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -28,6 +30,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_211918) do
     t.string "key"
     t.string "session_id"
     t.string "username"
+    t.integer "user_id"
+    t.integer "league_id"
     t.string "email"
     t.string "wallet"
     t.json "data"
