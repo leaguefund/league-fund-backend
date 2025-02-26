@@ -1,43 +1,43 @@
 class User < ApplicationRecord
-    def self.build_sleeper_user(username, session_id=nil)
+    def build_sleeper_user
         # Validate username passed 
         return nil if username.nil? || username.empty? 
-        user = User.find_or_create_by(username: username)
         # Populate Sleeper Data
-        user.sleeper_user
-        user.sleeper_avatar
-        user.sleeper_leagues
-
-        puts "-"*20
-        puts user.sleeper_user_api
-        puts user.sleeper_avatar_api
-        puts user.sleeper_league_api
-        puts "-"*20
-        return user
+        self.sleeper_user
+        # Validate sleeper ID found
+        if self.sleeper_id
+            self.sleeper_avatar
+            self.sleeper_leagues
+            puts "-"*20
+            puts self.sleeper_user_api
+            puts self.sleeper_avatar_api
+            puts self.sleeper_league_api
+            puts "-"*20
+        end
     end
 
     def sleeper_user
         # Validate username passed 
         return nil if username.nil? || username.empty? 
+        
         # Make call to sleeper user API
         response = Net::HTTP.get_response(URI.parse(sleeper_user_api))
-        if response.is_a?(Net::HTTPSuccess)
-            # Process the response body as needed
-            data = response.body
-            # For example, parse JSON data
-            parsed_data = JSON.parse(data)
-            # Display parsed data
-            Rails.logger.info(parsed_data)
-            self.sleeper_id = parsed_data["user_id"]
-            self.sleeper_avatar_id = parsed_data["avatar"]
-            self.save
-            # Use the parsed data within your model
-            return parsed_data
-        else
-            # Handle the error response
-            Rails.logger.error("HTTP Request failed: #{response.message}")
-            return {}
-        end
+
+        # Return nil if not successful
+        return nil unless response.is_a?(Net::HTTPSuccess)
+
+        # Process the response body as needed
+        data = response.body
+        # For example, parse JSON data
+        parsed_data = JSON.parse(data)
+
+        # Return nil if no username found.
+        return nil if parsed_data.nil?
+
+        # Save Sleeper data
+        self.sleeper_id = parsed_data["user_id"]
+        self.sleeper_avatar_id = parsed_data["avatar"]
+        self.save
     end
 
     def sleeper_avatar

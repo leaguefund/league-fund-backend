@@ -6,14 +6,27 @@ module V1
       class SleeperController < ApplicationController
         # POST /v1/api/sleeper/username
         def username
-          # For example, assume we receive a league id and an invite payload.
-          session_id = params[:session_id]
-          sleeper_user = params[:username]
-          # Setup user and session
-          user = User.build_sleeper_user(sleeper_user)
+          # Validate Session and Username passed
+          unless session_id = params[:session_id]
+            return render json: { error: "no-session-id" }, status: :not_found
+          end
+          unless sleeper_user = params[:username]
+            return render json: { error: "no-username" }, status: :not_found
+          end
+          # Find or Create User
+          user = User.find_or_create_by(import: :sleeper, username: sleeper_user)
+          # Find or Create Session
           session = Session.find_or_create_by(session_id: session_id)
-          session.user_id = user.id
+          session.username  = sleeper_user
+          session.key       = :sleeper_username
+          session.user_id   = user.id
           session.save
+          # Setup user and session
+          user.build_sleeper_user
+          # Validate if user found
+          unless user.sleeper_id
+            return render json: { error: "no-sleeper-user" }, status: :not_found
+          end
           # Render response
           render json: user.username_api_response
         end
