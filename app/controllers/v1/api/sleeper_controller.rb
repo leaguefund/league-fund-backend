@@ -4,6 +4,7 @@ require 'uri'
 module V1
     module Api
       class SleeperController < ApplicationController
+        skip_before_filter :verify_authenticity_token
         # POST /v1/api/sleeper/username
         def username
           # Validate Session and Username passed

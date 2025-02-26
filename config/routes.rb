@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       post  'league/invite', to: 'league#invite'
 
       post  'sleeper/username',   to: 'sleeper#username'
-      # get   'sleeper/username',   to: 'sleeper#username'
+      get   'sleeper/username',   to: 'sleeper#username'
 
       post  'user/email',            to: 'user#email'
       get   'user/email',            to: 'user#email'
