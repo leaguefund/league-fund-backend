@@ -84,8 +84,8 @@ qa:
 production:
   primary: &primary_production
     <<: *default
-    database: league_fund_backend_production
-    username: league_fund_backend
+    database: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE"] %>
+    username: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE_USERNAME"] %>
     password: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
