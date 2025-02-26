@@ -84,6 +84,7 @@ qa:
 production:
   primary: &primary_production
     <<: *default
+    url: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE_URL"] %>
     database: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE"] %>
     username: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE_USERNAME"] %>
     password: <%= ENV["LEAGUE_FUND_BACKEND_DATABASE_PASSWORD"] %>
