@@ -1,7 +1,7 @@
 module V1
     module Api
       class LeagueController < ApplicationController
-        skip_before_filter :verify_authenticity_token
+        skip_before_action :verify_authenticity_token
         # POST /v1/api/league/invite
         def invite
           # For example, assume we receive a league id and an invite payload.
