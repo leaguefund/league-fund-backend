@@ -49,7 +49,7 @@ class League < ApplicationRecord
         }
     end
 
-    def sleeper_build_users(season="2024")
+    def sleeper_build_users(season_s="2024")
         # Validate username passed 
         return nil if sleeper_id.nil? || sleeper_id.empty? 
         # Make call to sleeper user API
@@ -75,7 +75,7 @@ class League < ApplicationRecord
                 user.username = team["display_name"]
                 user.save
                 # Create seasonal connection
-                season = self.seasons.find_or_create_by(season: season, user_id: user.id)
+                season = self.seasons.find_or_create_by(season: season_s, user_id: user.id)
                 # Save Season Data
                 season.team_name = team["team_name"]
                 season.is_commissioner = true if (user.id == self.commissioner_id)

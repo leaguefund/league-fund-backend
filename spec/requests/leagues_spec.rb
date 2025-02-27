@@ -85,4 +85,32 @@ RSpec.describe "Leagues", type: :request do
           expect(response).to have_http_status(:ok)
         end
       end
+
+    describe "POST /v1/api/league/read" do
+        # @league.sleeper_build_users
+        let(:valid_attributes) { { league_address: @league.address, session_id: @session.session_id } }
+
+        it "validates email (ok)" do
+          expect {
+            post "/v1/api/league/read", params: valid_attributes
+          }.to change(User, :count).by(0)
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+    describe "POST /v1/api/league/read (returns multiple users)" do
+        let(:valid_attributes) { { league_address: @league.address, session_id: @session.session_id } }
+        it "validates email (ok)" do
+          # Build additional sleeper users
+          @league.sleeper_build_users
+          expect {
+            post "/v1/api/league/read", params: valid_attributes
+          }.to change(User, :count).by(0)
+          expect(response).to have_http_status(:ok)
+
+          teams_count = JSON.parse(response.body)["teams"].length rescue 0
+          # Expect to have at least 1 league
+          expect((teams_count > 1)).to be_truthy
+        end
+      end
 end
