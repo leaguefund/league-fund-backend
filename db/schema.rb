@@ -65,14 +65,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
   create_table "seasons", force: :cascade do |t|
     t.decimal "dues_ucsd"
     t.string "season"
+    t.string "team_name"
+    t.string "team_avatar"
     t.integer "user_id"
     t.integer "league_id"
+    t.boolean "is_commissioner"
+    t.boolean "is_owner"
+    t.boolean "is_bot"
     t.json "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["dues_ucsd"], name: "index_seasons_on_dues_ucsd"
+    t.index ["is_bot"], name: "index_seasons_on_is_bot"
+    t.index ["is_commissioner"], name: "index_seasons_on_is_commissioner"
+    t.index ["is_owner"], name: "index_seasons_on_is_owner"
     t.index ["league_id"], name: "index_seasons_on_league_id"
     t.index ["season"], name: "index_seasons_on_season"
+    t.index ["team_avatar"], name: "index_seasons_on_team_avatar"
+    t.index ["team_name"], name: "index_seasons_on_team_name"
     t.index ["user_id"], name: "index_seasons_on_user_id"
   end
 

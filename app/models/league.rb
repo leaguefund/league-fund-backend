@@ -3,6 +3,14 @@ class League < ApplicationRecord
     has_many :seasons
     has_many :users, through: :seasons
 
+    def latest_season
+        season = season.last.try(:season)
+    end
+
+    def latest_season_users
+        season.last.users
+    end
+
     def self.select_league
         all.map do |league|
             {
@@ -15,9 +23,25 @@ class League < ApplicationRecord
     end
 
     def select_team
-        # Generate teams
+        latest_season_key = seasons.last.try(:season)
+        latest_seasons_connections = seasons.where(season: latest_season_key)
 
-        # Return teams
+        teams = latest_seasons_connections.map do |season_team|
+            {
+                username: season_team.user.try(:username),
+                avatar: season_team.user.try(:avatar),
+                wallet: season_team.user.try(:wallet),
+                team_name: season_team.try(:team_name),
+                is_commissioner: season_team.try(:is_commissioner)
+            }
+        end
+        # Return League Data
+        return {
+            league_name: name,
+            league_avatar: avatar,
+            league_dues_ucsd: dues_ucsd,
+            teams: teams,
+        }
     end
 
     def sleeper_build_users(season="2024")
@@ -46,7 +70,13 @@ class League < ApplicationRecord
                 user.username = team["display_name"]
                 user.save
                 # Create seasonal connection
-                self.seasons.find_or_create_by(season: season, user_id: user.id)
+                season = self.seasons.find_or_create_by(season: season, user_id: user.id)
+                # Save Season Data
+                season.team_name = team["team_name"]
+                season.is_commissioner = true if (user.id == self.commissioner_id)
+                season.is_owner = team["is_owner"]
+                season.is_bot = team["is_bot"]
+                season.save
             end
             # Display parsed data
             Rails.logger.info(parsed_data)
