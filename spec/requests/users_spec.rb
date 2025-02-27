@@ -50,16 +50,18 @@ RSpec.describe "Users API", type: :request do
     end
   end
 
-  # describe "POST /v1/api/sleeper/username (league created)" do
-  #   let(:valid_attributes) { { username: @sleeper_username, session_id: @session_id } }
-  #   it "creates a user (ok)" do
-  #     expect {
-  #       post "/v1/api/sleeper/username", params: valid_attributes
-  #     }.to change(League, :count).by(1)
-  #     expect(response).to have_http_status(:ok)
-  #     expect(User.find_by(username: @sleeper_username)).not_to be_nil
-  #   end
-  # end
+  describe "POST /v1/api/sleeper/username (league returned)" do
+    let(:valid_attributes) { { username: @sleeper_username, session_id: @session_id } }
+    it "creates a user (ok)" do
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(League, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      leagues_count = JSON.parse(response.body)["leagues"].length rescue 0
+      # Expect to have at least 1 league
+      expect((leagues_count > 0)).to be_truthy
+    end
+  end
 
   describe "POST /v1/api/user/email" do
     let(:valid_attributes) { { email: "alex@leaguefund.xyz", session_id: @session_id } }

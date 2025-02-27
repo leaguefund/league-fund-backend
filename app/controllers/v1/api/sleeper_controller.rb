@@ -39,7 +39,7 @@ module V1
           # render json: user.username_api_response
           render json:        {
             status:     "success",
-            sessionID:  $session,
+            session_id:  $session.session_id,
             username:   user.username,
             leagues:    user.leagues.select_league,
             email:      "-",
