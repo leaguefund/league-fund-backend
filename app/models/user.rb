@@ -1,19 +1,24 @@
 class User < ApplicationRecord
+
+    has_many :sessions
+
     def build_sleeper_user
         # Validate username passed 
         return nil if username.nil? || username.empty? 
         # Populate Sleeper Data
         self.sleeper_user
         # Validate sleeper ID found
-        if self.sleeper_id
-            self.sleeper_avatar
-            self.sleeper_leagues
-            puts "-"*20
-            puts self.sleeper_user_api
-            puts self.sleeper_avatar_api
-            puts self.sleeper_league_api
-            puts "-"*20
-        end
+        return nil unless self.sleeper_id
+        # Fetch Sleeper Data
+        self.sleeper_avatar
+        self.sleeper_leagues
+        puts "="*20
+        puts "Sleeper APIs"
+        puts "-"*20
+        puts self.sleeper_user_api
+        puts self.sleeper_avatar_api
+        puts self.sleeper_league_api
+        puts "="*20
     end
 
     def sleeper_user

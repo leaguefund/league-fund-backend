@@ -31,18 +31,6 @@ module V1
           # Render response
           render json: user.username_api_response
         end
-  
-        # # GET /v1/api/league/read
-        # def read
-        #   # For this example, assume a league id is passed as a query parameter.
-        #   league = League.find_by(id: params[:league_id])
-        #   if league
-        #     render json: league
-        #   else
-        #     render json: { error: "League not found" }, status: :not_found
-        #   end
-        # end
-      end
     end
   end
   
