@@ -50,16 +50,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.string "name"
     t.integer "user_id"
     t.integer "league_id"
+    t.string "winner_wallet"
+    t.string "league_address"
     t.string "season"
     t.string "nft_image"
     t.json "nft_image_history"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["amount_ucsd"], name: "index_rewards_on_amount_ucsd"
+    t.index ["league_address"], name: "index_rewards_on_league_address"
     t.index ["league_id"], name: "index_rewards_on_league_id"
     t.index ["name"], name: "index_rewards_on_name"
     t.index ["season"], name: "index_rewards_on_season"
     t.index ["user_id"], name: "index_rewards_on_user_id"
+    t.index ["winner_wallet"], name: "index_rewards_on_winner_wallet"
   end
 
   create_table "seasons", force: :cascade do |t|

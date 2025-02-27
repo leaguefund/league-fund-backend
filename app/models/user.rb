@@ -2,6 +2,7 @@ class User < ApplicationRecord
 
     has_many :sessions
     has_many :seasons
+    has_many :rewards
     # has_many :leagues, through: :seasons
 
     def leagues

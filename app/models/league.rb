@@ -37,7 +37,8 @@ class League < ApplicationRecord
                 avatar: season_team.user.try(:avatar),
                 wallet: season_team.user.try(:wallet),
                 team_name: season_team.try(:team_name),
-                is_commissioner: season_team.try(:is_commissioner)
+                is_commissioner: season_team.try(:is_commissioner),
+                is_owner: season_team.try(:is_owner)
             }
         end
         # Return League Data
