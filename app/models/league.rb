@@ -1,7 +1,12 @@
 class League < ApplicationRecord
     has_many :rewards
     has_many :seasons
-    has_many :users, through: :seasons
+    # has_many :users, through: :seasons
+
+    def users
+        user_ids = seasons.pluck(:user_id)
+        User.where(id: user_ids)
+    end
 
     def latest_season
         season = season.last.try(:season)

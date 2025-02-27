@@ -2,8 +2,12 @@ class User < ApplicationRecord
 
     has_many :sessions
     has_many :seasons
-    has_many :leagues, through: :seasons
+    # has_many :leagues, through: :seasons
 
+    def leagues
+        league_ids = seasons.pluck(:league_id)
+        League.where(id: league_ids)
+    end
     def sleeper_build
         # Validate username passed 
         return nil if username.nil? || username.empty? 
