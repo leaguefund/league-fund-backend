@@ -28,13 +28,14 @@ module V1
             return render json: { error: "no-league-dues", message: "Internal Server Error (nld)" }, status: :not_found
           end
           # Find or create (should always be a find)
-          league                  = League.find_or_create_by(sleeper_id: params[:league_id])
+          league                  = League.find_or_create_by(id: params[:league_id])
           league.address          = league_address
           league.commissioner_id  = $session.user_id
           league.dues_ucsd        = league_dues_usdc
           league.save
-
+          
           # Fetch additional users
+          league.sleeper_build_users
 
           # Update Session Data
           $session.league_id = league.id

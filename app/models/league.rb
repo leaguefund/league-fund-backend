@@ -19,8 +19,49 @@ class League < ApplicationRecord
 
         # Return teams
     end
+
+    def sleeper_build_users(season="2024")
+        # Validate username passed 
+        return nil if sleeper_id.nil? || sleeper_id.empty? 
+        # Make call to sleeper user API
+        url = sleeper_fetch_users
+        api_call = ApiCall.create(url: url)
+        response = Net::HTTP.get_response(URI.parse(url))
+        # Successful response
+        if response.is_a?(Net::HTTPSuccess)
+            # Process the response body as needed
+            data = response.body
+            api_call.update(notes: data)
+            # For example, parse JSON data
+            parsed_data = JSON.parse(data)
+            # Update API Call
+            api_call.update(notes: parsed_data)
+            self.update(users_payload: data)
+            # Find or Create users (from League Teams) 
+            parsed_data.each do |team|
+                # Create User based on Sleeper ID
+                user = User.find_or_create_by(sleeper_id: team["user_id"])
+                user.avatar = team["metadata"]["avatar"] rescue nil
+                user.sleeper_avatar_id = team["avatar"]
+                user.username = team["display_name"]
+                user.save
+                # Create seasonal connection
+                self.seasons.find_or_create_by(season: season, user_id: user.id)
+            end
+            # Display parsed data
+            Rails.logger.info(parsed_data)
+        else
+            # Handle the error response
+            Rails.logger.error("HTTP Request failed: #{response.message}")
+            return {}
+        end
+    end
     
     def sleeper_avatar_api
         "https://sleepercdn.com/avatars/thumbs/#{sleeper_avatar_id}" rescue "https://sleepercdn.com/avatars/thumbs/<sleeper_avatar_id>"
+    end
+    
+    def sleeper_fetch_users
+        "https://api.sleeper.app/v1/league/#{sleeper_id}/users" rescue "https://api.sleeper.app/v1/league/<league_id>/users"
     end
 end

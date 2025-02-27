@@ -22,10 +22,8 @@ module V1
           unless email = params[:email]
             return render json: { error: "no-email", message: "Internal Server Error (ne)" }, status: :not_found
           end
-          # Find or Create Session
-          session = Session.find_or_create_by(session_id: session_id)
           # Fetch user
-          user = session.user
+          user = $session.user
           user.email = email
 
           # Send verification email

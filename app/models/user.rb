@@ -22,25 +22,6 @@ class User < ApplicationRecord
         puts "="*20
     end
 
-    def build_sleeper_user
-        # Validate username passed 
-        return nil if username.nil? || username.empty? 
-        # Populate Sleeper Data
-        self.sleeper_user
-        # Validate sleeper ID found
-        return nil unless self.sleeper_id
-        # Fetch Sleeper Data
-        self.sleeper_avatar
-        self.sleeper_leagues
-        puts "="*20
-        puts "Sleeper APIs"
-        puts "-"*20
-        puts self.sleeper_user_api
-        puts self.sleeper_avatar_api
-        puts self.sleeper_league_api
-        puts "="*20
-    end
-
     def sleeper_user
         # Validate username passed 
         return nil if username.nil? || username.empty? 
@@ -80,7 +61,7 @@ class User < ApplicationRecord
         # Make call to sleeper user API
         url = sleeper_league_api(season)
         api_call = ApiCall.create(url: url)
-        response = Net::HTTP.get_response(URI.parse(sleeper_league_api(season)))
+        response = Net::HTTP.get_response(URI.parse(url))
         # Successful response
         if response.is_a?(Net::HTTPSuccess)
             # Process the response body as needed
@@ -103,49 +84,9 @@ class User < ApplicationRecord
                 league.avatar = league.sleeper_avatar_api
                 league.save
 
-                # Generate users using fetch league's users
-
                 # Create seasonal connection
                 self.seasons.find_or_create_by(season: season, league_id: league.id)
             end
-        else
-            # Handle the error response
-            Rails.logger.error("HTTP Request failed: #{response.message}")
-            return {}
-        end
-    end
-
-    def sleeper_leagues
-        # Validate username passed 
-        return nil if sleeper_id.nil? || sleeper_id.empty? 
-        # Make call to sleeper user API
-        response = Net::HTTP.get_response(URI.parse(sleeper_league_api))
-        if response.is_a?(Net::HTTPSuccess)
-            # Process the response body as needed
-            data = response.body
-            # For example, parse JSON data
-            parsed_data = JSON.parse(data)
-            # Display parsed data
-            Rails.logger.info(parsed_data)
-
-            leagues_a = []
-            parsed_data.each do |league|
-                # Skip non-NFL leagues
-                next unless league["sport"] == "nfl"
-                # Parse league
-                league_name = league["name"]
-                league_id = league["league_id"]
-                league_avatar_id = league["avatar"]
-
-                leagues_a.push({
-                    league_id: league_id,
-                    league_name: league_name,
-                    league_avatar: "https://sleepercdn.com/avatars/thumbs/#{league_avatar_id}",
-                })
-            end
-            # Save league caches 
-            self.leagues_cache = leagues_a
-            self.save
         else
             # Handle the error response
             Rails.logger.error("HTTP Request failed: #{response.message}")

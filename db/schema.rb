@@ -35,6 +35,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.decimal "dues_ucsd"
     t.json "invites"
     t.json "seasons"
+    t.json "users_payload"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address"], name: "index_leagues_on_address"

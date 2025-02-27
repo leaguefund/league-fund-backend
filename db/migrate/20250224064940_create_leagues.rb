@@ -11,6 +11,7 @@ class CreateLeagues < ActiveRecord::Migration[8.0]
       
       t.json :invites
       t.json :seasons
+      t.json :users_payload
 
       t.timestamps
     end
