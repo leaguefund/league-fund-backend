@@ -1,6 +1,26 @@
 class User < ApplicationRecord
 
     has_many :sessions
+    has_many :seasons
+    has_many :leagues, through: :seasons
+
+    def sleeper_build
+        # Validate username passed 
+        return nil if username.nil? || username.empty? 
+        # Populate Sleeper Data
+        self.sleeper_user
+        # Validate sleeper ID found
+        return nil unless self.sleeper_id
+        # Fetch Sleeper Data
+        self.sleeper_avatar
+        puts "="*20
+        puts "Sleeper APIs"
+        puts "-"*20
+        puts self.sleeper_user_api
+        puts self.sleeper_avatar_api
+        puts self.sleeper_league_api
+        puts "="*20
+    end
 
     def build_sleeper_user
         # Validate username passed 
@@ -54,6 +74,47 @@ class User < ApplicationRecord
         self.save
     end
 
+    def sleeper_build_leagues(season="2024")
+        # Validate username passed 
+        return nil if sleeper_id.nil? || sleeper_id.empty? 
+        # Make call to sleeper user API
+        url = sleeper_league_api(season)
+        api_call = ApiCall.create(url: url)
+        response = Net::HTTP.get_response(URI.parse(sleeper_league_api(season)))
+        # Successful response
+        if response.is_a?(Net::HTTPSuccess)
+            # Process the response body as needed
+            data = response.body
+            api_call.update(notes: data)
+            # For example, parse JSON data
+            parsed_data = JSON.parse(data)
+            api_call.update(notes: parsed_data)
+            self.update(leagues_cache: parsed_data)
+            # Display parsed data
+            Rails.logger.info(parsed_data)
+            # Create Leagues for user
+            parsed_data.each do |league_slp|
+                # Skip non-NFL leagues
+                next unless league_slp["sport"] == "nfl"
+                # Find or create sleeper league
+                league = League.find_or_create_by(sleeper_id: league_slp["league_id"])
+                league.name = league_slp["name"]
+                league.sleeper_avatar_id = league_slp["avatar"]
+                league.avatar = league.sleeper_avatar_api
+                league.save
+
+                # Generate users using fetch league's users
+
+                # Create seasonal connection
+                self.seasons.find_or_create_by(season: season, league_id: league.id)
+            end
+        else
+            # Handle the error response
+            Rails.logger.error("HTTP Request failed: #{response.message}")
+            return {}
+        end
+    end
+
     def sleeper_leagues
         # Validate username passed 
         return nil if sleeper_id.nil? || sleeper_id.empty? 
@@ -98,8 +159,8 @@ class User < ApplicationRecord
     def sleeper_avatar_api
         "https://sleepercdn.com/avatars/thumbs/#{sleeper_avatar_id}" rescue "https://sleepercdn.com/avatars/thumbs/<sleeper_avatar_id>"
     end
-    def sleeper_league_api
-        "https://api.sleeper.app/v1/user/#{sleeper_id}/leagues/nfl/2024" rescue "https://api.sleeper.app/v1/user/<sleeper_id>/leagues/nfl/2024"
+    def sleeper_league_api(season="2024")
+        "https://api.sleeper.app/v1/user/#{sleeper_id}/leagues/nfl/#{season}" rescue "https://api.sleeper.app/v1/user/<sleeper_id>/leagues/nfl/2024"
     end
 
     def league_response

@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_25_211918) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "api_calls", force: :cascade do |t|
+    t.string "url"
+    t.string "summary"
+    t.json "response"
+    t.json "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["summary"], name: "index_api_calls_on_summary"
+    t.index ["url"], name: "index_api_calls_on_url"
+  end
 
   create_table "leagues", force: :cascade do |t|
     t.string "name"
@@ -21,12 +32,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_211918) do
     t.string "sleeper_id"
     t.integer "commissioner_id"
     t.string "sleeper_avatar_id"
+    t.decimal "dues_ucsd"
     t.json "invites"
     t.json "seasons"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address"], name: "index_leagues_on_address"
     t.index ["commissioner_id"], name: "index_leagues_on_commissioner_id"
+    t.index ["dues_ucsd"], name: "index_leagues_on_dues_ucsd"
     t.index ["sleeper_avatar_id"], name: "index_leagues_on_sleeper_avatar_id"
     t.index ["sleeper_id"], name: "index_leagues_on_sleeper_id"
   end
@@ -46,6 +59,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_211918) do
     t.index ["name"], name: "index_rewards_on_name"
     t.index ["season"], name: "index_rewards_on_season"
     t.index ["user_id"], name: "index_rewards_on_user_id"
+  end
+
+  create_table "seasons", force: :cascade do |t|
+    t.decimal "dues_ucsd"
+    t.string "season"
+    t.integer "user_id"
+    t.integer "league_id"
+    t.json "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dues_ucsd"], name: "index_seasons_on_dues_ucsd"
+    t.index ["league_id"], name: "index_seasons_on_league_id"
+    t.index ["season"], name: "index_seasons_on_season"
+    t.index ["user_id"], name: "index_seasons_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|

@@ -2,6 +2,17 @@ module V1
     module Api
       class UserController < ApplicationController
         skip_before_action :verify_authenticity_token
+        before_action :identify_session
+
+        def identify_session
+          # Validate Session and Username passed
+          unless session_id = params[:session_id]
+            return render json: { error: "no-session-id", message: "Internal Server Error (nsi)" }, status: :not_found
+          end
+          # Create session variable
+          $session = Session.find_or_create_by(session_id: session_id)
+        end
+
         # POST /v1/api/user/email
         def email
           # Validate Session and Username passed
@@ -23,6 +34,8 @@ module V1
           # t.timestamp :email_verification_sent_at
 
           render json: { status: "success", message: "Email Sent" }
+        ensure
+          $session = nil
         end
   
         # POST /v1/api/user/validate_email
@@ -39,6 +52,8 @@ module V1
           # Validate token
           
           render json: { status: "success", message: "Email Validated" }
+        ensure
+          $session = nil
         end
       end
     end
