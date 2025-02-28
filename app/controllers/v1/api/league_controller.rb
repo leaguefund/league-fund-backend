@@ -23,17 +23,32 @@ module V1
           unless league_address = params[:league_address]
             return render json: { error: "no-league-address", message: "Internal Server Error (nla)" }, status: :not_found
           end
+          # Validate Wallet Address passed
+          unless wallet_address = params[:wallet_address]
+            return render json: { error: "no-wallet-address", message: "Internal Server Error (nwa)" }, status: :not_found
+          end
           # Validate League Dues passed
           unless league_dues_usdc = params[:league_dues_usdc]
             return render json: { error: "no-league-dues", message: "Internal Server Error (nld)" }, status: :not_found
           end
-          # Find or create (should always be a find)
-          league                  = League.find_or_create_by(id: params[:league_id])
+          # Find or create League based on sleeper_id + commissioner
+          league                  = League.find_or_create_by(id: params[:league_id], commissioner_id: $session.user_id)
           league.address          = league_address
-          league.commissioner_id  = $session.user_id
           league.dues_ucsd        = league_dues_usdc
           league.save
-          
+
+          Rails.logger.info("--------1")
+          Rails.logger.info(params[:wallet_address])
+          Rails.logger.info("--------2")
+          Rails.logger.info($session.inspect)
+          Rails.logger.info("--------3")
+          Rails.logger.info($session.user.inspect)
+          Rails.logger.info("--------4")
+          # Save 
+          $session.user.update(wallet: wallet_address)
+
+          Rails.logger.info($session.user.errors.inspect)
+
           # Fetch additional users
           league.sleeper_build_users
 
