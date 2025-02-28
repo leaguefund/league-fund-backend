@@ -65,7 +65,6 @@ module V1
             Rails.logger.info(params[:winner_wallet])
             Rails.logger.info(params[:league_address])
             Rails.logger.info($winner_wallet.inspect)
-            Rails.logger.info(league_address.inspect)
             Rails.logger.info($winning_user.inspect)
             Rails.logger.info($league.inspect)
             Rails.logger.info($league.address)
