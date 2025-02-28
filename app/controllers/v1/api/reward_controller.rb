@@ -57,10 +57,19 @@ module V1
 
         def read
             # Find Winner
-            winner = $league.users.find_by(wallet: $winner_wallet)
-            # Grab rewards (could be many)
-            rewards = $league.rewards.where(user_id: winner.id)
-            rewards = $league.rewards.where(user_id: winner.id)
+            # winner = $league.users.find_by(wallet: $winner_wallet)
+            # # Grab rewards (could be many)
+            # rewards = $league.rewards.where(user_id: winner.id)
+            # rewards = $league.rewards.where(user_id: winner.id)
+            Rails.logger.info("-------1")
+            Rails.logger.info(params[:winner_wallet])
+            Rails.logger.info(params[:league_address])
+            Rails.logger.info($winner_wallet.inspect)
+            Rails.logger.info(league_address.inspect)
+            Rails.logger.info($winning_user.inspect)
+            Rails.logger.info($league.inspect)
+            Rails.logger.info($league.address)
+            Rails.logger.info("-------2")
             # Find rewards for user in a specific league
             rewards = $winning_user.rewards.where(league_address: $league.address)
             # Fetch rewards

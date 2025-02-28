@@ -91,6 +91,8 @@ RSpec.describe "Leagues", type: :request do
         let(:valid_attributes) { { league_address: @league.address, session_id: @session.session_id } }
 
         it "validates email (ok)" do
+          puts @league.address
+          puts @session.session_id
           expect {
             post "/v1/api/league/read", params: valid_attributes
           }.to change(User, :count).by(0)
