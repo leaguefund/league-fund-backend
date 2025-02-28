@@ -12,13 +12,13 @@ module V1
             # Create session variable
             $session = Session.find_or_create_by(session_id: session_id)
             # Validate League Address passed
-            unless league_address = params[:league_address]
+            unless league_address = params[:league_address].to_s.downcase
                 return render json: { error: "no-league-address", message: "Internal Server Error (nla)" }, status: :not_found
             end
             # Create league variable
             $league = League.find_by(address: league_address)
             # Validate Winner Wallet passed
-            unless $winner_wallet = params[:winner_wallet]
+            unless $winner_wallet = params[:winner_wallet].to_s.downcase
                 return render json: { error: "no-winner-wallet", message: "Internal Server Error (nww)" }, status: :not_found
             end
             # Fetch winning user
