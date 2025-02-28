@@ -36,22 +36,10 @@ module V1
           league.address          = league_address
           league.dues_ucsd        = league_dues_usdc
           league.save
-
-          Rails.logger.info("--------1")
-          Rails.logger.info(params[:wallet_address])
-          Rails.logger.info("--------2")
-          Rails.logger.info($session.inspect)
-          Rails.logger.info("--------3")
-          Rails.logger.info($session.user.inspect)
-          Rails.logger.info("--------4")
-          # Save 
+          # Save user's wallet address
           $session.user.update(wallet: wallet_address)
-
-          Rails.logger.info($session.user.errors.inspect)
-
           # Fetch additional users
           league.sleeper_build_users
-
           # Update Session Data
           $session.league_id = league.id
           $session.save
