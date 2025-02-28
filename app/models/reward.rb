@@ -5,9 +5,9 @@ require 'json'
 class Reward < ApplicationRecord
     belongs_to :user, optional: true
     belongs_to :league, optional: true
-    @standard_prompt="watercolor of a professional NFL player celebrating a touchdown in the end zone of a professional football stadium"
 
     def generate_image(prompt=nil)
+        @standard_prompt="watercolor of a professional NFL player celebrating a touchdown in the end zone of a professional football stadium"
         # Replace with standard prompt if non-was passed.
         prompt = @standard_prompt if prompt.nil? || prompt.to_s.empty?
         # Generate new NFT image candidate
@@ -42,9 +42,16 @@ class Reward < ApplicationRecord
         response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
             http.request(request)
         end
+
+        puts JSON.parse(response.body)
+        puts prompt
+        puts JSON.parse(response.body)
+        puts JSON.parse(response.body)["data"]
         # Return Image 
         JSON.parse(response.body)["data"].first["url"]
-    rescue
+    rescue => errors
+        puts errors.inspect
+        puts errors.backtrace
         # BBB 7472
         "https://res.cloudinary.com/coin-nft/image/upload/q_99,w_329/f_auto/v1/cache/1/42/23/42236f9559e3ecaa723d1d839c4e42aa5f0cdb72080de7c2798ea7930437ce1a-NWVhMWM3ZDAtYzQyZi00OTRkLWFmNWQtZDdjZTk5MzhlYjk3"
     end
