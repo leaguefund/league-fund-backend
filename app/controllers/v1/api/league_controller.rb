@@ -38,13 +38,21 @@ module V1
             return render json: { error: "no-league-dues", message: "Internal Server Error (nld)" }, status: :not_found
           end
           logger.info("++++++6.1")
-          logger.info(params[:league_id])
-          logger.info($session.inspect)
-          logger.info($session.user_id)
+          logger.info("params[:league_id]: #{params[:league_id]}")
+          logger.info("$session.inspect: #{$session.inspect}")
+          logger.info("$session.user_id: #{$session.user_id}")
           logger.info("++++++6.2")
           # Find or create League based on sleeper_id + commissioner
-          league_record                  = League.find_or_create_by(id: params[:league_id], commissioner_id: $session.user_id)
-          logger.info("++++++6.3")
+          league_record = League.find_by(id: params[:league_id], commissioner_id: $session.user_id)
+          if league_record.nil?
+            begin
+              league_record = League.create(id: params[:league_id], commissioner_id: $session.user_id)
+              logger.info("++++++6.3")
+            rescue => e
+              logger.error("Error creating league: #{e.message}")
+              return render json: { error: "league-creation-failed", message: "Internal Server Error (lcf)" }, status: :internal_server_error
+            end
+          end
           league_record.address          = league_address
           league_record.dues_ucsd        = league_dues_usdc
           logger.info("++++++6.4")
