@@ -104,10 +104,10 @@ module V1
                 return render json: { error: "no-reward-found", message: "Internal Server Error (nrf)" }, status: :not_found
             end
             Rails.logger.info("-------1")
-            Rails.logger.info(params[:prompt])
+            Rails.logger.info(params[:prompt_text])
             Rails.logger.info("-------1")
             # Generate new image 
-            prompt = params[:prompt]
+            prompt = params[:prompt_text]
             if prompt.nil? || prompt.to_s.empty?
                 Rails.logger.info("-------2")
                 reward.generate_image
