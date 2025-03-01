@@ -37,11 +37,17 @@ module V1
           unless league_dues_usdc = params[:league_dues_usdc]
             return render json: { error: "no-league-dues", message: "Internal Server Error (nld)" }, status: :not_found
           end
-          logger.info("++++++6")
+          logger.info("++++++6.1")
+          logger.info(params[:league_id])
+          logger.info($session.inspect)
+          logger.info($session.user_id)
+          logger.info("++++++6.2")
           # Find or create League based on sleeper_id + commissioner
           league_record                  = League.find_or_create_by(id: params[:league_id], commissioner_id: $session.user_id)
+          logger.info("++++++6.3")
           league_record.address          = league_address
           league_record.dues_ucsd        = league_dues_usdc
+          logger.info("++++++6.4")
           league_record.save
           logger.info("++++++7")
           # Save user's wallet address
