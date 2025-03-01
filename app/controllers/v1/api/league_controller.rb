@@ -39,19 +39,19 @@ module V1
           end
           logger.info("++++++6")
           # Find or create League based on sleeper_id + commissioner
-          league                  = League.find_or_create_by(id: params[:league_id], commissioner_id: $session.user_id)
-          league.address          = league_address
-          league.dues_ucsd        = league_dues_usdc
-          league.save
+          league_record                  = League.find_or_create_by(id: params[:league_id], commissioner_id: $session.user_id)
+          league_record.address          = league_address
+          league_record.dues_ucsd        = league_dues_usdc
+          league_record.save
           logger.info("++++++7")
           # Save user's wallet address
           $session.user.update(wallet: wallet_address)
           logger.info("++++++8")
           # Fetch additional users
-          league.sleeper_build_users
+          league_record.sleeper_build_users
           logger.info("++++++9")
           # Update Session Data
-          $session.league_id = league.id
+          $session.league_id = league_record.id
           $session.save
           logger.info("++++++10")
           # Logic for league creation
