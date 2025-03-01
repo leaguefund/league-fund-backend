@@ -22,7 +22,8 @@ class League < ApplicationRecord
                 id:         league.id,
                 name:       league.name,
                 avatar:     league.avatar,
-                address:    league.address
+                address:    league.address,
+                sleeper_id: league.sleeper_id
             }
         end
     end
