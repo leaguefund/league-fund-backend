@@ -75,7 +75,7 @@ module V1
             Rails.logger.info($winning_user.rewards.last.inspect)
             Rails.logger.info("-------4")
             # Find rewards for user in a specific league
-            rewards = $winning_user.rewards.where(league_address: $league.address)
+            rewards = $winning_user.rewards.where(league_address: $league.address.to_s.downcase)
             # Fetch rewards
             rewards_view = rewards.mint_reward_view
             first_reward = rewards_view.pop
