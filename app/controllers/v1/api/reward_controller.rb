@@ -5,6 +5,7 @@ module V1
         before_action :identify_session, except:[:image]
 
         def identify_session
+            Rails.logger.info("-----------------1")
             # Validate Session and Username passed
             unless session_id = params[:session_id]
                 return render json: { error: "no-session-id", message: "Internal Server Error (nsi)" }, status: :not_found
@@ -17,32 +18,47 @@ module V1
             end
             # Create league variable
             $league = League.find_by(address: league_address)
+            Rails.logger.info("-----------------2")
             # Validate Winner Wallet passed
             unless $winner_wallet = params[:winner_wallet].to_s.downcase
                 return render json: { error: "no-winner-wallet", message: "Internal Server Error (nww)" }, status: :not_found
             end
+            Rails.logger.info("-----------------3")
+            Rails.logger.info(params[:winner_wallet])
+            Rails.logger.info("-----------------3")
             # Fetch winning user
             $winning_user = User.find_or_create_by(wallet: $winner_wallet)
         end
 
         def created
+            Rails.logger.info("-----------------4")
             # Validate Name passed
             unless reward_name = params[:reward_name]
                 return render json: { error: "no-reward-name", message: "Internal Server Error (nrn)" }, status: :not_found
             end
+            Rails.logger.info("-----------------5")
             # Validate USDC passed
             unless reward_amount_ucsd = params[:amount_ucsd]
                 return render json: { error: "no-reward-usdc", message: "Internal Server Error (nru)" }, status: :not_found
             end
+            Rails.logger.info("-----------------6")
             # Set season
             season = params[:season] || "2024"
+            Rails.logger.info("-----------------7")
+            Rails.logger.info($winning_user.inspect)
             # Find or create reward
             reward = $winning_user.rewards.find_or_create_by(league_id: $league.id, amount_ucsd: reward_amount_ucsd, name: reward_name, season: season)
 
+            Rails.logger.info("-----------------8")
+            Rails.logger.info($winner_wallet)
             # Todo, make test as this seemed not to work.
             reward.winner_wallet = $winner_wallet
             reward.league_address = $league.address
             reward.save
+
+            Rails.logger.info("-----------------9")
+            Rails.logger.info(reward.inspect)
+            Rails.logger.info("-----------------9")
 
             # Generate an initial image for minting
             reward.generate_image
