@@ -5,7 +5,6 @@ module V1
         before_action :identify_session, except:[:image]
 
         def identify_session
-            Rails.logger.info("-----------------1")
             # Validate Session and Username passed
             unless session_id = params[:session_id]
                 return render json: { error: "no-session-id", message: "Internal Server Error (nsi)" }, status: :not_found
@@ -13,53 +12,36 @@ module V1
             # Create session variable
             $session = Session.find_or_create_by(session_id: session_id)
             # Validate League Address passed
-            unless league_address = params[:league_address].to_s.downcase
+            unless league_address = params[:league_address]
                 return render json: { error: "no-league-address", message: "Internal Server Error (nla)" }, status: :not_found
             end
             # Create league variable
             $league = League.find_by(address: league_address)
-            Rails.logger.info("-----------------2")
             # Validate Winner Wallet passed
-            unless $winner_wallet = params[:winner_wallet].to_s.downcase
+            unless $winner_wallet = params[:winner_wallet]
                 return render json: { error: "no-winner-wallet", message: "Internal Server Error (nww)" }, status: :not_found
             end
-            Rails.logger.info("-----------------3")
-            Rails.logger.info(params[:winner_wallet])
-            Rails.logger.info("-----------------3")
             # Fetch winning user
             $winning_user = User.find_or_create_by(wallet: $winner_wallet)
         end
 
         def created
-            Rails.logger.info("-----------------4")
             # Validate Name passed
             unless reward_name = params[:reward_name]
                 return render json: { error: "no-reward-name", message: "Internal Server Error (nrn)" }, status: :not_found
             end
-            Rails.logger.info("-----------------5")
             # Validate USDC passed
             unless reward_amount_ucsd = params[:amount_ucsd]
                 return render json: { error: "no-reward-usdc", message: "Internal Server Error (nru)" }, status: :not_found
             end
-            Rails.logger.info("-----------------6")
             # Set season
             season = params[:season] || "2024"
-            Rails.logger.info("-----------------7")
-            Rails.logger.info($winning_user.inspect)
             # Find or create reward
-            reward = $winning_user.rewards.find_or_create_by(league_id: $league.id, amount_ucsd: reward_amount_ucsd, name: reward_name, season: season)
-
-            Rails.logger.info("-----------------8")
-            Rails.logger.info($winner_wallet)
-            # Todo, make test as this seemed not to work.
+            reward = $league.rewards.find_or_create_by(user_id: $winning_user.id, amount_ucsd: reward_amount_ucsd, name: reward_name, season: season)
+            # Save wallet & address
             reward.winner_wallet = $winner_wallet
             reward.league_address = $league.address
             reward.save
-
-            Rails.logger.info("-----------------9")
-            Rails.logger.info(reward.inspect)
-            Rails.logger.info("-----------------9")
-
             # Generate an initial image for minting
             reward.generate_image
             # Logic for league creation
@@ -72,31 +54,13 @@ module V1
         end
 
         def read
-            # Find Winner
-            # winner = $league.users.find_by(wallet: $winner_wallet)
-            # # Grab rewards (could be many)
-            # rewards = $league.rewards.where(user_id: winner.id)
-            # rewards = $league.rewards.where(user_id: winner.id)
-            Rails.logger.info("-------1")
-            Rails.logger.info(params[:winner_wallet])
-            Rails.logger.info(params[:league_address])
-            Rails.logger.info($winner_wallet.inspect)
-            Rails.logger.info($winning_user.inspect)
-            Rails.logger.info($league.inspect)
-            Rails.logger.info($league.address)
-            Rails.logger.info("-------2")
-            Rails.logger.info(Reward.all.inspect)
-            Rails.logger.info("-------3")
-            Rails.logger.info($winning_user.rewards.inspect)
-            Rails.logger.info($winning_user.rewards.last.inspect)
-            Rails.logger.info("-------4")
             # Find rewards for user in a specific league
-            rewards = $winning_user.rewards.where(league_address: $league.address.to_s.downcase)
+            rewards = $league.rewards.where(winner_wallet: $winner_wallet)
             # Fetch rewards
             rewards_view = rewards.mint_reward_view
             first_reward = rewards_view.pop
             # Return Reward
-            render json: { status: "success", message: "Reward created successfully", reward: first_reward, other_wallet_rewards: rewards_view }, status: :ok
+            render json: { status: "success", message: "Reward read successful", reward: first_reward, other_wallet_rewards: rewards_view }, status: :ok
         ensure
             $session = nil  
             $league = nil 
@@ -119,20 +83,16 @@ module V1
             unless reward = Reward.find_by_id(params[:reward_web_2_id])
                 return render json: { error: "no-reward-found", message: "Internal Server Error (nrf)" }, status: :not_found
             end
-            Rails.logger.info("-------1")
-            Rails.logger.info(params[:prompt_text])
-            Rails.logger.info("-------1")
             # Generate new image 
             prompt = params[:prompt_text]
+            # Generate new image (with or without custom prompt)
             if prompt.nil? || prompt.to_s.empty?
-                Rails.logger.info("-------2")
                 reward.generate_image
             else
-                Rails.logger.info("-------3")
                 reward.generate_image(prompt)
             end
             # Return Reward
-            render json: { status: "success", message: "Reward created successfully", reward: reward.reward_view }, status: :ok
+            render json: { status: "success", message: "Reward image updated successfully", reward: reward.reward_view }, status: :ok
         ensure
             $session = nil
             $league = nil  

@@ -16,6 +16,15 @@ class League < ApplicationRecord
         season.last.users
     end
 
+    def puts_sleeper_apis
+        puts "="*20
+        puts "Sleeper APIs for #{name}"
+        puts "-"*20
+        puts self.sleeper_avatar_api
+        puts self.sleeper_fetch_users
+        puts "="*20
+    end
+
     def self.select_league
         all.map do |league|
             {

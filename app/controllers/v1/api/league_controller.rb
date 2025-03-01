@@ -31,8 +31,11 @@ module V1
           unless league_dues_usdc = params[:league_dues_usdc]
             return render json: { error: "no-league-dues", message: "Internal Server Error (nld)" }, status: :not_found
           end
+          # Claim sleeper league with no commissioner or create new
+          unless league = League.where(sleeper_id: league_sleeper_id, commissioner_id: nil).last
+            league = League.find_or_create_by(sleeper_id: league_sleeper_id, commissioner_id: $session.user_id)
+          end
           # A Sleeper League may have multiple leagues but only one per commissioner
-          league                  = League.find_or_create_by(sleeper_id: league_sleeper_id, commissioner_id: $session.user_id)
           league.address          = league_address
           league.dues_ucsd        = league_dues_usdc
           league.save
@@ -40,6 +43,7 @@ module V1
           $session.user.update(wallet: wallet_address)
           # Fetch additional users
           league.sleeper_build_users
+          league.puts_sleeper_apis
           # Update Session Data
           $session.league_id = league.id
           $session.save

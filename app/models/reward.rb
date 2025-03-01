@@ -31,31 +31,25 @@ class Reward < ApplicationRecord
     end
 
     def dalle_call(prompt)
-        Rails.logger.info("-------8")
+        # Return random photo if running in TEST
+        return ["https://images.unsplash.com/photo-1592670130429-fa412d400f50", "https://images.unsplash.com/photo-1551336841-32a98a5917eb", "https://images.unsplash.com/photo-1496196614460-48988a57fccf"].sample if Rails.env.test?
+        # Create URI for DALLE image generations
         uri = URI.parse("https://api.openai.com/v1/images/generations")
         request = Net::HTTP::Post.new(uri)
         request.content_type = "application/json"
-        request["Authorization"] = "Bearer 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"
+        request["Authorization"] = "Bearer #{ENV["OPEN_API_KEY"]}"
         request.body = JSON.dump({
             "model": "dall-e-3",
             "prompt": prompt,
             "n": 1,
             "size": "1024x1024"
         })
-        Rails.logger.info("-------9")
-        Rails.logger.info(prompt)
-        Rails.logger.info("-------9")
         # Set SSL
         req_options = {use_ssl: uri.scheme == "https"}
         # Make response to Dall-E
         response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
             http.request(request)
         end
-
-        puts JSON.parse(response.body)
-        puts prompt
-        puts JSON.parse(response.body)
-        puts JSON.parse(response.body)["data"]
         # Return Image 
         JSON.parse(response.body)["data"].first["url"]
     rescue => errors
