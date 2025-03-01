@@ -103,11 +103,16 @@ module V1
             unless reward = Reward.find_by_id(params[:reward_web_2_id])
                 return render json: { error: "no-reward-found", message: "Internal Server Error (nrf)" }, status: :not_found
             end
+            Rails.logger.info("-------1")
+            Rails.logger.info(params[:prompt])
+            Rails.logger.info("-------1")
             # Generate new image 
             prompt = params[:prompt]
             if prompt.nil? || prompt.to_s.empty?
+                Rails.logger.info("-------2")
                 reward.generate_image
             else
+                Rails.logger.info("-------3")
                 reward.generate_image(prompt)
             end
             # Return Reward
