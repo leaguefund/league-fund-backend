@@ -16,7 +16,7 @@ RSpec.describe "Rewards", type: :request do
     @user.save
     # Init League
     @league = League.find_or_create_by(sleeper_id: @sleeper_champs_league_id)
-    @league.address = "0xLeague"
+    @league.address = "0xLeague".to_s.downcase
     @league.dues_ucsd = 10
     @league.save
     # Init Season
@@ -54,6 +54,9 @@ RSpec.describe "Rewards", type: :request do
       reward = Reward.create(name: @reward_name, winner_wallet: @winner_wallet, league_address: @league_address, amount_ucsd: @reward_amount_usdc, user_id: @user.id, league_id: @league.id)
       post "/v1/api/reward/read", params: valid_attributes
       expect(response).to have_http_status(:ok)
+      puts "JSON.parse(response.body)"
+      puts JSON.parse(response.body)
+      puts "JSON.parse(response.body)"
       expect(JSON.parse(response.body)["reward"]["web_2_id"]).to eq(reward.id)
     end
   end
