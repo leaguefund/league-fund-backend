@@ -15,6 +15,7 @@ module V1
           # Create session variable
           $session = Session.find_or_create_by(session_id: session_id)
         end
+
         # POST /v1/api/sleeper/username
         def username
           # Validate Username passed
@@ -25,7 +26,10 @@ module V1
           user = User.find_or_create_by(import: :sleeper, username: sleeper_user)
           # Build Sleeper data
           user.sleeper_build
+          user.sleeper_build_avatar
           user.sleeper_build_leagues
+          # Puts API links
+          user.puts_sleeper_apis
           # Update Session Data
           $session.username  = sleeper_user
           $session.key       = :sleeper_username_flow

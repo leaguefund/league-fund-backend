@@ -39,6 +39,34 @@ RSpec.describe "Users API", type: :request do
     end
   end
 
+  describe "POST /v1/api/sleeper/username (user created only once)" do
+    let(:valid_attributes) { { username: @sleeper_username, session_id: @session_id } }
+    it "creates a user (ok)" do
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(User, :count).by(1)
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(User, :count).by(0)
+      expect(response).to have_http_status(:ok)
+      expect(League.find_by(sleeper_id: @sleeper_champs_league_id)).not_to be_nil
+    end
+  end
+
+  describe "POST /v1/api/sleeper/username (avatar saved)" do
+    let(:valid_attributes) { { username: @sleeper_username, session_id: @session_id } }
+    it "creates a user (ok)" do
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(User, :count).by(1)
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(User, :count).by(0)
+      expect(response).to have_http_status(:ok)
+      expect(User.find_by(username: @sleeper_username).avatar).not_to be_nil
+    end
+  end
+
   describe "POST /v1/api/sleeper/username (league created)" do
     let(:valid_attributes) { { username: @sleeper_username, session_id: @session_id } }
     it "creates a user (ok)" do
@@ -46,7 +74,6 @@ RSpec.describe "Users API", type: :request do
         post "/v1/api/sleeper/username", params: valid_attributes
       }.to change(League, :count).by(1)
       expect(response).to have_http_status(:ok)
-      expect(User.find_by(username: @sleeper_username)).not_to be_nil
     end
   end
 
@@ -60,6 +87,20 @@ RSpec.describe "Users API", type: :request do
       leagues_count = JSON.parse(response.body)["leagues"].length rescue 0
       # Expect to have at least 1 league
       expect((leagues_count > 0)).to be_truthy
+    end
+  end
+
+  describe "POST /v1/api/sleeper/username (season created)" do
+    let(:valid_attributes) { { username: @sleeper_username, session_id: @session_id } }
+    it "creates a user (ok)" do
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(User, :count).by(1)
+      expect {
+        post "/v1/api/sleeper/username", params: valid_attributes
+      }.to change(User, :count).by(0)
+      expect(response).to have_http_status(:ok)
+      expect(User.find_by(username: @sleeper_username).seasons).not_to be_empty
     end
   end
 

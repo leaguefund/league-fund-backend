@@ -9,17 +9,10 @@ class User < ApplicationRecord
         league_ids = seasons.pluck(:league_id)
         League.where(id: league_ids)
     end
-    def sleeper_build
-        # Validate username passed 
-        return nil if username.nil? || username.empty? 
-        # Populate Sleeper Data
-        self.sleeper_user
-        # Validate sleeper ID found
-        return nil unless self.sleeper_id
-        # Fetch Sleeper Data
-        self.sleeper_avatar
+
+    def puts_sleeper_apis
         puts "="*20
-        puts "Sleeper APIs"
+        puts "Sleeper APIs for #{username}"
         puts "-"*20
         puts self.sleeper_user_api
         puts self.sleeper_avatar_api
@@ -27,31 +20,26 @@ class User < ApplicationRecord
         puts "="*20
     end
 
-    def sleeper_user
+    def sleeper_build
         # Validate username passed 
         return nil if username.nil? || username.empty? 
-        
         # Make call to sleeper user API
         response = Net::HTTP.get_response(URI.parse(sleeper_user_api))
-
         # Return nil if not successful
         return nil unless response.is_a?(Net::HTTPSuccess)
-
         # Process the response body as needed
         data = response.body
         # For example, parse JSON data
         parsed_data = JSON.parse(data)
-
         # Return nil if no username found.
         return nil if parsed_data.nil?
-
         # Save Sleeper data
         self.sleeper_id = parsed_data["user_id"]
         self.sleeper_avatar_id = parsed_data["avatar"]
         self.save
     end
 
-    def sleeper_avatar
+    def sleeper_build_avatar
         # Validate username passed 
         return nil if sleeper_avatar_id.nil? || sleeper_avatar_id.empty? 
         # Create avatart URL
@@ -79,23 +67,22 @@ class User < ApplicationRecord
             # Display parsed data
             Rails.logger.info(parsed_data)
             # Create Leagues for user
-            parsed_data.each do |league_slp|
+            parsed_data.each do |sleeper_league|
                 # Skip non-NFL leagues
-                next unless league_slp["sport"] == "nfl"
+                next unless sleeper_league["sport"] == "nfl"
                 # Find or create sleeper league
-                league = League.find_or_create_by(sleeper_id: league_slp["league_id"])
-                league.name = league_slp["name"]
-                league.sleeper_avatar_id = league_slp["avatar"]
-                league.avatar = league.sleeper_avatar_api
+                league = League.find_or_create_by(sleeper_id: sleeper_league["league_id"])
+                league.name                 = sleeper_league["name"]
+                league.sleeper_avatar_id    = sleeper_league["avatar"]
+                league.avatar               = league.sleeper_avatar_api
                 league.save
-
                 # Create seasonal connection
                 self.seasons.find_or_create_by(season: season, league_id: league.id)
             end
         else
             # Handle the error response
             Rails.logger.error("HTTP Request failed: #{response.message}")
-            return {}
+            return 'sleeper-error'
         end
     end
 
