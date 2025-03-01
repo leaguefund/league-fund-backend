@@ -7,9 +7,14 @@ class Reward < ApplicationRecord
     belongs_to :league, optional: true
 
     def generate_image(prompt=nil)
+        Rails.logger.info("-------4")
         @standard_prompt="watercolor of a professional NFL player celebrating a touchdown in the end zone of a professional football stadium"
+        Rails.logger.info("-------5")
         # Replace with standard prompt if non-was passed.
         prompt = @standard_prompt if prompt.nil? || prompt.to_s.empty?
+        Rails.logger.info("-------6")
+        Rails.logger.info(prompt)
+        Rails.logger.info("-------7")
         # Generate new NFT image candidate
         new_image_candidate = dalle_call(prompt)
         # Safe NFT Image to reward record
@@ -26,6 +31,7 @@ class Reward < ApplicationRecord
     end
 
     def dalle_call(prompt)
+        Rails.logger.info("-------8")
         uri = URI.parse("https://api.openai.com/v1/images/generations")
         request = Net::HTTP::Post.new(uri)
         request.content_type = "application/json"
@@ -36,6 +42,9 @@ class Reward < ApplicationRecord
             "n": 1,
             "size": "1024x1024"
         })
+        Rails.logger.info("-------9")
+        Rails.logger.info(prompt)
+        Rails.logger.info("-------9")
         # Set SSL
         req_options = {use_ssl: uri.scheme == "https"}
         # Make response to Dall-E
