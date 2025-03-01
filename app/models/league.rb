@@ -6,8 +6,10 @@ class League < ApplicationRecord
     after_save :save_downcase_address
 
     def save_downcase_address
+        Rails.logger.info("=======1")
         # Validate address changed
         return nil unless saved_change_to_address?
+        Rails.logger.info("=======2")
         # Save downcase address
         update(address_downcase: self.address.to_s.downcase)
     end

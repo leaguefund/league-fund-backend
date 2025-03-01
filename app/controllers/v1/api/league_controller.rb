@@ -31,14 +31,27 @@ module V1
           unless league_dues_usdc = params[:league_dues_usdc]
             return render json: { error: "no-league-dues", message: "Internal Server Error (nld)" }, status: :not_found
           end
+          Rails.logger.info("=======")
+          Rails.logger.info(league_address)
+          Rails.logger.info(league_sleeper_id)
+          Rails.logger.info($session.user_id)
+          Rails.logger.info("-------")
           # Claim sleeper league with no commissioner or create new
           unless league = League.where(sleeper_id: league_sleeper_id, commissioner_id: nil).last
             league = League.find_or_create_by(sleeper_id: league_sleeper_id, commissioner_id: $session.user_id)
           end
+
+          Rails.logger.info("-------")
+          Rails.logger.info(league.inspect)
+          Rails.logger.info("=======")
           # A Sleeper League may have multiple leagues but only one per commissioner
           league.address          = league_address
           league.dues_ucsd        = league_dues_usdc
           league.save
+
+          Rails.logger.info("-------")
+          Rails.logger.info(league.errors.inspect)
+          Rails.logger.info("=======")
           # Save user's wallet address
           $session.user.update(wallet: wallet_address)
           # Fetch additional users
