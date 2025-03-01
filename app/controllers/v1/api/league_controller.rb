@@ -49,6 +49,8 @@ module V1
               league_record = League.create(id: params[:league_id], commissioner_id: $session.user_id)
               logger.info("++++++6.3")
             rescue => e
+              logger.info(e.inspect)
+              logger.info(e.backtrace)
               logger.error("Error creating league: #{e.message}")
               return render json: { error: "league-creation-failed", message: "Internal Server Error (lcf)" }, status: :internal_server_error
             end
