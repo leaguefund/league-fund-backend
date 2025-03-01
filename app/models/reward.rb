@@ -49,10 +49,6 @@ class Reward < ApplicationRecord
             "n": 1,
             "size": "1024x1024"
         })
-
-        Rails.logger.info("-aaaa--------1")
-        Rails.logger.info("Bearer #{ENV["OPEN_API_KEY"]}")
-        Rails.logger.info("-aaaa--------2")
         # Set SSL
         req_options = {use_ssl: uri.scheme == "https"}
         # Make response to Dall-E
@@ -60,14 +56,8 @@ class Reward < ApplicationRecord
             http.request(request)
         end
         api_call.update(notes: response.body)
-        Rails.logger.info("-aaaa--------3")
-        Rails.logger.info(response.body)
-        Rails.logger.info("-aaaa--------4")
 
         parsed_response = JSON.parse(response.body)
-
-        Rails.logger.info(parsed_response)
-        Rails.logger.info("-aaaa--------5")
 
         parsed_response["data"].first["url"]
         # Return Image 
