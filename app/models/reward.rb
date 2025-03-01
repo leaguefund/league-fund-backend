@@ -38,6 +38,7 @@ class Reward < ApplicationRecord
         # Return random photo if running in TEST
         return ["https://images.unsplash.com/photo-1592670130429-fa412d400f50", "https://images.unsplash.com/photo-1551336841-32a98a5917eb", "https://images.unsplash.com/photo-1496196614460-48988a57fccf"].sample if Rails.env.test?
         # Create URI for DALLE image generations
+        api_call = ApiCall.create(url: "https://api.openai.com/v1/images/generations")
         uri = URI.parse("https://api.openai.com/v1/images/generations")
         request = Net::HTTP::Post.new(uri)
         request.content_type = "application/json"
@@ -48,12 +49,27 @@ class Reward < ApplicationRecord
             "n": 1,
             "size": "1024x1024"
         })
+
+        Rails.logger.info("-aaaa--------1")
+        Rails.logger.info("Bearer #{ENV["OPEN_API_KEY"]}")
+        Rails.logger.info("-aaaa--------2")
         # Set SSL
         req_options = {use_ssl: uri.scheme == "https"}
         # Make response to Dall-E
         response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
             http.request(request)
         end
+        api_call.update(notes: response.body)
+        Rails.logger.info("-aaaa--------3")
+        Rails.logger.info(response.body)
+        Rails.logger.info("-aaaa--------4")
+
+        parsed_response = JSON.parse(response.body)
+
+        Rails.logger.info(parsed_response)
+        Rails.logger.info("-aaaa--------5")
+
+        parsed_response["data"].first["url"]
         # Return Image 
         JSON.parse(response.body)["data"].first["url"]
     rescue => errors
