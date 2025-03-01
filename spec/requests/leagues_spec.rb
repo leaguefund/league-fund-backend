@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe "Leagues", type: :request do
 
       before(:all) do
-        puts "===1"
         @session_id = SecureRandom.uuid
         @sleeper_username = "alexmcritchie"
         @sleeper_user_id = "1130233530270801920"
@@ -106,10 +105,10 @@ RSpec.describe "Leagues", type: :request do
     end
 
     describe "POST /v1/api/league/invite" do
-        let(:league) { League.find_or_create_by(address: "0x123") }
-        let(:valid_attributes) { { emails: ["alex@gmail.com", "shannon@gmail.com"], league_address: league.address, session_id: @session.session_id } }
+        let(:valid_attributes) { { emails: ["alex@gmail.com", "shannon@gmail.com"], league_address: @league_address, session_id: @session.session_id } }
 
         it "validates email (ok)" do
+          League.find_or_create_by(address: @league_address)
           expect {
             post "/v1/api/league/invite", params: valid_attributes
           }.to change(User, :count).by(0)

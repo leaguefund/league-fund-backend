@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.string "name"
     t.string "avatar"
     t.string "address"
+    t.string "address_downcase"
     t.string "sleeper_id"
     t.integer "commissioner_id"
     t.string "sleeper_avatar_id"
@@ -39,6 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address"], name: "index_leagues_on_address"
+    t.index ["address_downcase"], name: "index_leagues_on_address_downcase"
     t.index ["commissioner_id"], name: "index_leagues_on_commissioner_id"
     t.index ["dues_ucsd"], name: "index_leagues_on_dues_ucsd"
     t.index ["sleeper_avatar_id"], name: "index_leagues_on_sleeper_avatar_id"
@@ -52,6 +54,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.integer "league_id"
     t.string "winner_wallet"
     t.string "league_address"
+    t.string "league_address_downcase"
     t.string "season"
     t.string "nft_image"
     t.json "nft_image_history"
@@ -59,6 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.datetime "updated_at", null: false
     t.index ["amount_ucsd"], name: "index_rewards_on_amount_ucsd"
     t.index ["league_address"], name: "index_rewards_on_league_address"
+    t.index ["league_address_downcase"], name: "index_rewards_on_league_address_downcase"
     t.index ["league_id"], name: "index_rewards_on_league_id"
     t.index ["name"], name: "index_rewards_on_name"
     t.index ["season"], name: "index_rewards_on_season"
@@ -115,6 +119,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.string "email"
     t.string "avatar"
     t.string "wallet"
+    t.string "wallet_downcase"
     t.string "sleeper_id"
     t.string "sleeper_avatar_id"
     t.json "seasons"
@@ -132,5 +137,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_25_811919) do
     t.index ["sleeper_id"], name: "index_users_on_sleeper_id"
     t.index ["username"], name: "index_users_on_username"
     t.index ["wallet"], name: "index_users_on_wallet"
+    t.index ["wallet_downcase"], name: "index_users_on_wallet_downcase"
   end
 end

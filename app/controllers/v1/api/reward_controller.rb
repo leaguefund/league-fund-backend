@@ -16,7 +16,7 @@ module V1
                 return render json: { error: "no-league-address", message: "Internal Server Error (nla)" }, status: :not_found
             end
             # Create league variable
-            $league = League.find_by(address: league_address)
+            $league = League.find_by(address_downcase: league_address.to_s.downcase)
             # Validate Winner Wallet passed
             unless $winner_wallet = params[:winner_wallet]
                 return render json: { error: "no-winner-wallet", message: "Internal Server Error (nww)" }, status: :not_found

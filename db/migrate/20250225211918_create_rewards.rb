@@ -7,6 +7,7 @@ class CreateRewards < ActiveRecord::Migration[6.1]
       t.integer :league_id,     index: true
       t.string :winner_wallet,  index: true
       t.string :league_address, index: true
+      t.string :league_address_downcase, index: true
       t.string :season,         index: true
       t.string :nft_image
       t.json :nft_image_history

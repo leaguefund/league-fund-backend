@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :email,            index: true
       t.string :avatar
       t.string :wallet,           index: true
+      t.string :wallet_downcase,  index: true
       t.string :sleeper_id,       index: true
       t.string :sleeper_avatar_id,index: true
       t.json :seasons

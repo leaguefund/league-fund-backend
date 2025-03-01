@@ -3,6 +3,15 @@ class League < ApplicationRecord
     has_many :seasons
     # has_many :users, through: :seasons
 
+    after_save :save_downcase_address
+
+    def save_downcase_address
+        # Validate address changed
+        return nil unless saved_change_to_address?
+        # Save downcase address
+        update(address_downcase: self.address.to_s.downcase)
+    end
+
     def users
         user_ids = seasons.pluck(:user_id)
         User.where(id: user_ids)

@@ -6,15 +6,19 @@ class Reward < ApplicationRecord
     belongs_to :user, optional: true
     belongs_to :league, optional: true
 
+    after_save :save_downcase_league_address
+
+    def save_downcase_league_address
+        # Validate league_address changed
+        return nil unless saved_change_to_league_address?
+        # Save downcase league address
+        update(league_address_downcase: self.league_address.to_s.downcase)
+    end
+
     def generate_image(prompt=nil)
-        Rails.logger.info("-------4")
         @standard_prompt="watercolor of a professional NFL player celebrating a touchdown in the end zone of a professional football stadium"
-        Rails.logger.info("-------5")
         # Replace with standard prompt if non-was passed.
         prompt = @standard_prompt if prompt.nil? || prompt.to_s.empty?
-        Rails.logger.info("-------6")
-        Rails.logger.info(prompt)
-        Rails.logger.info("-------7")
         # Generate new NFT image candidate
         new_image_candidate = dalle_call(prompt)
         # Safe NFT Image to reward record

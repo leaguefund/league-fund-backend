@@ -5,6 +5,15 @@ class User < ApplicationRecord
     has_many :rewards
     # has_many :leagues, through: :seasons
 
+    after_save :save_downcase_wallet
+
+    def save_downcase_wallet
+        # Validate wallet_changed
+        return nil unless saved_change_to_wallet
+        # Save downcase wallet
+        update(wallet_downcase: self.wallet.to_s.downcase)
+    end
+
     def leagues
         league_ids = seasons.pluck(:league_id)
         League.where(id: league_ids)

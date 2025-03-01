@@ -4,6 +4,7 @@ class CreateLeagues < ActiveRecord::Migration[8.0]
       t.string :name
       t.string :avatar
       t.string :address,          index: true
+      t.string :address_downcase, index: true
       t.string :sleeper_id,       index: true
       t.integer :commissioner_id, index: true
       t.string :sleeper_avatar_id,index: true

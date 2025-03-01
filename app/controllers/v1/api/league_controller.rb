@@ -60,7 +60,7 @@ module V1
             return render json: { error: "no-league-address", message: "Internal Server Error (nla)" }, status: :not_found
           end
           # Validate League Address passed
-          unless league = League.find_by(address: league_address)
+          unless league = League.find_by(address_downcase: league_address.to_s.downcase)
             return render json: { error: "no-league-found", message: "Internal Server Error (nlf)" }, status: :not_found
           end
           # Validate Emails passed
@@ -82,7 +82,7 @@ module V1
             return render json: { error: "no-league-address", message: "Internal Server Error (nla)" }, status: :not_found
           end
           # Validate League Address passed
-          unless league = League.find_by(address: league_address)
+          unless league = League.find_by(address_downcase: league_address.to_s.downcase)
             return render json: { error: "no-league-found", message: "Internal Server Error (nlf)" }, status: :not_found
           end
           # Return JSON
