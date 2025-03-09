@@ -65,6 +65,7 @@ module V1
           # Return JSON
           render json: { 
             status: "success", 
+            league: league.league_read,
             name: league.name,
             avatar: league.avatar,
             sleeper_teams: league.sleeper_teams,
@@ -110,6 +111,7 @@ module V1
           # Return JSON
           render json: { 
             status: "success", 
+            league: league.league_read,
             name: league.name,
             avatar: league.avatar,
             sleeper_teams: league.sleeper_teams,

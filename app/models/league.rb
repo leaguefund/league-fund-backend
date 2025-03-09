@@ -36,6 +36,16 @@ class League < ApplicationRecord
         puts "="*20
     end
 
+    def league_read
+        return { 
+            name: self.name,
+            avatar: self.avatar,
+            sleeper_teams: self.sleeper_teams,
+            league_id: self.id,
+            league_sleeper_id: self.sleeper_id
+        }
+    end
+
     def self.select_league
         all.map do |league|
             {
