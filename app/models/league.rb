@@ -48,6 +48,23 @@ class League < ApplicationRecord
         end
     end
 
+    def sleeper_teams
+        # Fetch Latest Season Key
+        latest_season_key = seasons.last.try(:season)
+        latest_seasons_connections = seasons.where(season: latest_season_key)
+        # Return teams for last season
+        return latest_seasons_connections.map do |season_team|
+            {
+                username: season_team.user.try(:username),
+                avatar: season_team.user.try(:avatar),
+                wallet: season_team.user.try(:wallet),
+                team_name: season_team.try(:team_name),
+                is_commissioner: season_team.try(:is_commissioner),
+                is_owner: season_team.try(:is_owner)
+            }
+        end
+    end
+
     def select_team
         latest_season_key = seasons.last.try(:season)
         latest_seasons_connections = seasons.where(season: latest_season_key)

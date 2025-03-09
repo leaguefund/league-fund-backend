@@ -60,8 +60,17 @@ module V1
           # Update Session Data
           $session.league_id = league.id
           $session.save
-          # Logic for league creation
-          render json: { status: "success", message: "League created successfully" }, status: :ok
+          # # Logic for league creation
+          # render json: { status: "success", message: "League created successfully" }, status: :ok
+          # Return JSON
+          render json: { 
+            status: "success", 
+            name: league.name,
+            avatar: league.avatar,
+            sleeper_teams: league.sleeper_teams,
+            league_id: league.id,
+            league_sleeper_id: league.sleeper_id
+          }
         ensure
           $session = nil
         end
@@ -101,9 +110,10 @@ module V1
           # Return JSON
           render json: { 
             status: "success", 
-            league_id: league.id,
             name: league.name,
             avatar: league.avatar,
+            sleeper_teams: league.sleeper_teams,
+            league_id: league.id,
             league_sleeper_id: league.sleeper_id,
             teams: league.select_team,
             dues_ucsd: league.dues_ucsd
